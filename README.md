@@ -1,6 +1,8 @@
 # MyBMPLib
 
-A super simple C++ bitmap library.
+A super simple bitmap library written in C.
+
+*Supports Windows only*
 
 ## Usage
 
