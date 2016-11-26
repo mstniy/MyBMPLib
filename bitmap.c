@@ -33,12 +33,11 @@ bool BDeleteBitmap(Bitmap bmp)
 
 bool BCloneBitmap(Bitmap *dbmp,Bitmap sbmp)
 {
-	if (dbmp->Bits == sbmp.Bits)
-		return true;
-	BDeleteBitmap(*dbmp);
-	if (BCreateBitmap(dbmp,sbmp.nWidth,sbmp.nHeight)==false)
+	Bitmap newbmp;
+	if (BCreateBitmap(&newbmp,sbmp.nWidth,sbmp.nHeight)==false)
 		return false;
-	memcpy(dbmp->Bits,sbmp.Bits,sbmp.nHeight*sbmp.nWidth*sizeof(COLORREF));
+	memcpy(newbmp.Bits,sbmp.Bits,sbmp.nHeight*sbmp.nWidth*sizeof(COLORREF));
+	memcpy(dbmp,&newbmp,sizeof(Bitmap));
 	return true;
 }
 
