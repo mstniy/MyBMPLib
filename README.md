@@ -46,9 +46,7 @@ A super simple C++ bitmap library.
   
 ## Remarks
  
-#### Using BGetPixel and BSetPixel:
- 
-  *For both functions, the X parameter represents the horizontal and the Y parameter represents the vertical.
+  *For BGetPixel and BSetPixel, the X parameter represents the horizontal and the Y parameter represents the vertical.
    Upper left corner has coordinates (0,0).*
    
   *In order to create a copy of a bitmap, do not use the assignment operator (=). Instead, use BCloneBitmap function.*
