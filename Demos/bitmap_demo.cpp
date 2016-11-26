@@ -1,5 +1,5 @@
 #include<windows.h>
-#include "bitmap.h"
+#include "..\bitmap.h"
 #include<stdio.h>
 #include<math.h>
 void Fail(const char *funcname,HWND hwnd=NULL)
