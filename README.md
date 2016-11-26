@@ -1,3 +1,5 @@
+
+
 # MyBMPLib
 
 A super simple bitmap library written in C.
@@ -52,3 +54,5 @@ A super simple bitmap library written in C.
    Upper left corner has coordinates (0,0).*
    
   *In order to create a copy of a bitmap, do not use the assignment operator (=). Instead, use BCloneBitmap function.*
+  
+  *None of the functions which accept a "Bitmap *" as parameter will release the memory used by the old bitmap object. All callers of these functions must take extra caution to not cause any memory leak.*
