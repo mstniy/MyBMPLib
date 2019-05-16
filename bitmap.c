@@ -75,20 +75,18 @@ bool BImportFromDDB(Bitmap *bmp,HBITMAP hbmp,HDC hdc)
 {
 	BITMAPINFO bmi={0};
 	Bitmap newbmp;
-	BITMAP *bitmap,*bitmaporig;
-	bitmap=(BITMAP *)malloc(sizeof(BITMAP)+3);
+	BITMAP *bitmap;
+	bitmap=(BITMAP *)malloc(sizeof(BITMAP));
 	if (bitmap==NULL)
 		return false;
-	bitmaporig=bitmap;
-	*(BYTE **)&bitmap += 4-(size_t)bitmap%4;
 	if (GetObject(hbmp,sizeof(BITMAP),bitmap)==false)
 	{
-		free(bitmaporig);
+		free(bitmap);
 		return false;
 	}
 	if (BCreateBitmap(&newbmp,bitmap->bmWidth,bitmap->bmHeight)==false)
 	{
-		free(bitmaporig);
+		free(bitmap);
 		return false;
 	}
 	bmi.bmiHeader.biSize=sizeof(BITMAPINFOHEADER);
@@ -99,12 +97,12 @@ bool BImportFromDDB(Bitmap *bmp,HBITMAP hbmp,HDC hdc)
 	bmi.bmiHeader.biCompression=BI_RGB;
 	if (GetDIBits(hdc,hbmp,0,bitmap->bmHeight,newbmp.Bits,&bmi,DIB_RGB_COLORS)==false)
 	{
-		free(bitmaporig);
+		free(bitmap);
 		BDeleteBitmap(newbmp);
 		return false;
 	}
 	memcpy(bmp,&newbmp,sizeof(Bitmap));
-	free(bitmaporig);
+	free(bitmap);
 	return true;
 }
 
@@ -162,22 +160,20 @@ bool BImportFromFile(Bitmap *bmp,LPCTSTR lpFileName)
 {
 	ZeroMemory(bmp,sizeof(Bitmap));
 	DWORD dwtmp;
-	BITMAP *bitmap=(BITMAP *)malloc(sizeof(BITMAP)+3); // extra memory for possible alignment issues
-	BITMAP *origbitmap=bitmap;
+	BITMAP *bitmap=(BITMAP *)malloc(sizeof(BITMAP));
 	int curbyteorig,curpixelnew,width,height,bbp,padding,curcolumn;
 	LPVOID bits;
 	if (bitmap==NULL)
 		return false;
-	*(BYTE **)&bitmap += 4-(size_t)bitmap%4; // 4-byte alignment,as required by GetObject
 	HBITMAP hbmpli=(HBITMAP)LoadImageA(NULL,lpFileName,IMAGE_BITMAP,0,0,LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 	if (hbmpli==NULL)
 	{
-		free((void *)origbitmap);
+		free((void *)bitmap);
 		return false;
 	}
 	if (GetObject(hbmpli,sizeof(BITMAP),(LPVOID)bitmap)==0)
 	{
-		free((void *)origbitmap);
+		free((void *)bitmap);
 		DeleteObject(hbmpli);
 		return false;
 	}
@@ -191,12 +187,12 @@ bool BImportFromFile(Bitmap *bmp,LPCTSTR lpFileName)
 		bmp->Bits=(COLORREF *)bitmap->bmBits;
 		bmp->nHeight=bitmap->bmHeight;
 		bmp->nWidth=bitmap->bmWidth;
-		free((void *)origbitmap);
+		free((void *)bitmap);
 		return true;
 	}
 	if (BCreateBitmap(bmp,width,height)==false)
 	{
-		free((void *)origbitmap);
+		free((void *)bitmap);
 		DeleteObject(hbmpli);
 		return false;
 	}
@@ -217,11 +213,11 @@ bool BImportFromFile(Bitmap *bmp,LPCTSTR lpFileName)
 	}
 	else
 	{
-		free((void *)origbitmap);
+		free((void *)bitmap);
 		DeleteObject(hbmpli);
 		return false;
 	}
-	free((void *)origbitmap);
+	free((void *)bitmap);
 	DeleteObject(hbmpli);
 	return true;
 }

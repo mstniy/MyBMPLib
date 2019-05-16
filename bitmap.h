@@ -2,6 +2,9 @@
 
 #define BITMAP_H
 #include<windows.h>
+#ifndef PCVOID
+#define PCVOID const void*
+#endif
 typedef struct Bitmap
 {
 	HBITMAP hbmp;
